@@ -46,57 +46,21 @@ endpoints.get('/filtrar/livros', autenticador, async (req, res) => {
 
 endpoints.get('/filtrar/livros/titulo', autenticador, async (req, res) => {
     try {
-        let titulo = req.query.titulo;
+        const filtro = req.query.filtro;
 
-        let resposta = await ListarLivrosTitulo(titulo);
-
-        res.status(200).send({
-            Lista: resposta
-        })
-    }
-
-    catch (err) {
-        res.status(401).send({
-            erro: err
-        });
-    }
-})
-
-endpoints.get('/filtrar/livros/autor', autenticador, async (req, res) => {
-    try {
-        let autor = req.query.autor;
-
-        let resposta = await ListarLivrosAutor(autor);
+        const resposta = await ListarLivrosFiltro(filtro);
 
         res.status(200).send({
             Lista: resposta
-        })
-    }
-
+        });
+    } 
+    
     catch (err) {
-        res.status(401).send({
-            erro: err
+        res.status(500).send({
+            erro: "Erro ao buscar livros."
         });
     }
-})
-
-endpoints.get('/filtrar/livros/genero', autenticador, async (req, res) => {
-    try {
-        let genero = req.query.genero;
-
-        let resposta = await ListarLivrosGenero(genero);
-
-        res.status(200).send({
-            Lista: resposta
-        })
-    }
-
-    catch (err) {
-        res.status(401).send({
-            erro: err
-        });
-    }
-})
+});
 
 endpoints.post('/livros', autenticador, async (req, res) => {
     try {

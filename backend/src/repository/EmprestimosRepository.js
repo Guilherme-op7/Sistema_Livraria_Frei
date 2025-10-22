@@ -1,44 +1,20 @@
 import connection from "../database/connection.js";
 
-export async function ListarEmprestimos() {
-    let [resposta] =
-        await connection.query(
-            `SELECT emprestimos.id_livro, emprestimos.nome_aluno, emprestimos.turma, 
-            emprestimos.data_emprestimo, emprestimos.data_prevista_devolucao, emprestimos.status,
-            livros.titulo FROM emprestimos
-            INNER JOIN livros ON emprestimos.id_livro = livros.id`
-        )
+export async function ListarEmprestimos(filtro = '') {
+    const [resposta] = await connection.query(
+        `SELECT e.id, e.id_livro, e.nome_aluno, e.turma,
+                e.data_emprestimo, e.data_prevista_devolucao, e.status,
+                l.titulo
+         FROM emprestimos e
+         INNER JOIN livros l ON e.id_livro = l.id
+         WHERE e.nome_aluno LIKE ? OR l.titulo LIKE ?`,
+        [`%${filtro}%`, `%${filtro}%`]
+    );
 
     return resposta;
 }
 
-export async function ListarEmprestimosTitulo(titulo) {
-    let [resposta] =
-        await connection.query(
-            `SELECT emprestimos.id, emprestimos.id_livro, emprestimos.nome_aluno, emprestimos.turma, 
-            emprestimos.data_emprestimo, emprestimos.data_prevista_devolucao, emprestimos.status,
-            livros.titulo FROM emprestimos
-            INNER JOIN livros ON emprestimos.id_livro = livros.id
-            WHERE livros.titulo LIKE ?`,
-            [`%${titulo}%`]
-        )
 
-    return resposta;
-}
-
-export async function ListarEmprestimosAluno(nome_aluno) {
-    let [resposta] =
-        await connection.query(
-            `SELECT emprestimos.id, emprestimos.id_livro, emprestimos.nome_aluno, emprestimos.turma, 
-            emprestimos.data_emprestimo, emprestimos.data_prevista_devolucao, emprestimos.status,
-            livros.titulo FROM emprestimos
-            INNER JOIN livros ON emprestimos.id_livro = livros.id
-            WHERE emprestimos.nome_aluno LIKE ?`,
-            [`%${nome_aluno}%`]
-        )
-
-    return resposta;
-}
 
 export async function InserirEmprestimo(NovosDados) {
     let [resposta] =
@@ -52,7 +28,7 @@ export async function InserirEmprestimo(NovosDados) {
 }
 
 export async function AtualizarEmprestimo(id, status, data_prevista_devolucao) {
-    let [resposta] = 
+    let [resposta] =
         await connection.query(
             `UPDATE emprestimos 
              SET status = ?, data_prevista_devolucao = ?

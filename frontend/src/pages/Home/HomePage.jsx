@@ -6,7 +6,7 @@ import Bloco from '../../components/LivroBloco'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
-function App() {
+function HomePage() {
     const [arr, setArr] = useState([]);
     const [filtro, setFiltro] = useState('');
 
@@ -65,4 +65,4 @@ function App() {
     )
 }
 
-export default App
+export default HomePage

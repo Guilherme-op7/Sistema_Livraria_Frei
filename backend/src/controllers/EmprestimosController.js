@@ -1,60 +1,27 @@
 import { Router } from "express";
 
 import { getAuthentication } from "../utils/jwt.js";
-import { ListarEmprestimos, InserirEmprestimo, ListarEmprestimosAluno, ListarEmprestimosTitulo, MarcarComoDevolvido } from "../repository/EmprestimosRepository.js";
+import { ListarEmprestimos, InserirEmprestimo, MarcarComoDevolvido } from "../repository/EmprestimosRepository.js";
 
 const endpoints = Router();
 const autenticador = getAuthentication();
 
 endpoints.get('/emprestimos', autenticador, async (req, res) => {
     try {
-        let dados = req.body;
+        const filtro = req.query.filtro; 
+        const resposta = await ListarEmprestimos(filtro);
 
-        let resposta = await ListarEmprestimos(dados);
-
-        res.status(200).send({
-            resposta: resposta
-        })
+        res.status(200).json({ resposta });
     }
 
     catch (err) {
-        res.status(401).send({
-            erro: err.message
-        });
-    }
-})
-
-endpoints.get('/emprestimos/titulo', autenticador, async (req, res) => {
-    try {
-        let titulo = req.query.titulo;
-
-        let resposta = await ListarEmprestimosTitulo(titulo);
-
-        res.status(200).send(resposta);
-    }
-
-    catch (err) {
-        res.status(400).send({
+        res.status(500).json({
             erro: err.message
         });
     }
 });
 
-endpoints.get('/emprestimos/aluno', autenticador, async (req, res) => {
-    try {
-        let nome_aluno = req.query.nome_aluno;
-        
-        let resposta = await ListarEmprestimosAluno(nome_aluno);
 
-        res.status(200).send(resposta);
-    }
-
-    catch (err) {
-        res.status(400).send({
-            erro: err.message
-        });
-    }
-});
 
 endpoints.post('/emprestimos', autenticador, async (req, res) => {
     try {

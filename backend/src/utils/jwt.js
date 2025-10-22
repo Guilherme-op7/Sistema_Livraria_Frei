@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 
 const KEY = 'livraria_frei'
 
-
 export function generateToken(userInfo) {
   if (!userInfo.role)
     userInfo.role = 'user';

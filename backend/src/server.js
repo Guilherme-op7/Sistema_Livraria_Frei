@@ -9,7 +9,6 @@ server.use(cors());
 
 Roteamento(server);
 
-
 server.listen(5010, () => {
     console.log(`Servidor subiu!`)
 })

@@ -3,6 +3,7 @@ import { FaExchangeAlt } from "react-icons/fa";
 
 import Header from '../../components/Header'
 import Navegacao from '../../components/Navegacao'
+import Bloco from '../../components/LivroBloco'
 
 function App() {
     return (
@@ -19,6 +20,12 @@ function App() {
                         <button className="flex cursor-pointer w-1/2 gap-2 text-white hover:bg-blue-500 transition-all bg-blue-600 justify-center items-center h-10 rounded-md">Adicionar Livro</button>
                     </div>
                 </div>
+                <Bloco
+                    titulo={'O senhor dos anéis'}
+                    autor={'J.R.R Tolkien'}
+                    ano={'2024'}
+                    genero={'Fantasia'}
+                    status={'Disponível'} />
             </div>
         </div>
     )

@@ -1,64 +1,90 @@
-import api from '../../api.js'
-
-import frei from '../../assets/images/frei.png'
-
-import { useState } from "react"
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../api";
+import frei from "../../assets/images/frei.png";
 
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [desabilitado, setDesabilitado] = useState(false);
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [erro, setErro] = useState("");
     const navigate = useNavigate();
 
-    const credenciais = {
-        "email": email,
-        "senha": senha
-    }
+    useEffect(() => {
+        const usuario = localStorage.getItem("usuario");
 
-    function Enter(e) {
-        if (e.key === 'Enter')
-            CadastrarAdmin();
-    }
-
-    async function CadastrarAdmin() {
-        if (!email || !senha) {
-            alert("Credenciais inválidas!") // vou adicionar um modal de erro aqui
-            setDesabilitado(false)
-            return;
-        }
-
-        try {
-            const resp = await api.post('/admin/login', credenciais)
-            alert(resp.data.mensagem)
-
-            const token = resp.data.token;
-            localStorage.setItem("token", token);
-
-            setDesabilitado(true)
+        if (usuario) {
             navigate('/Home');
         }
+    }, []);
 
-        catch (err) {
-            console.log(err)
-            setDesabilitado(false)
-            return;
+
+    async function entrar() {
+        try {
+            const body = {
+                email: email,
+                senha: senha
+            };
+
+            const response = await api.post('/admin/login', body);
+
+            const token = response.data.token;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("email", email);
+
+            navigate('/Home');
+
+        }
+
+        catch (error) {
+            alert(error)
         }
     }
 
+
     return (
-        <div className="flex items-center justify-center flex-col w-full h-screen gap-2 bg-blue-500">
+        <div className="flex justify-center items-center w-screen h-screen bg-blue-700">
+            <div className="bg-white rounded-2xl shadow-lg p-12 w-130 flex flex-col items-center">
 
-            <div className='flex bg-white p-6 flex-col w-100 h-120 justify-center rounded-2xl'>
-                <img className='flex self-center' src={frei} width={100} height={30} alt="" />
-                <label className='flex font-medium text-gray-700'>Email de acesso:</label>
-                <input className="border-1 w-full p-2 outline-none border-blue-200 rounded-md h-10" onKeyUp={Enter} type="text" value={email} onChange={e => setEmail(e.target.value)} />
-                <label className='flex font-medium text-gray-700'>Senha:</label>
-                <input className="border-1 w-full p-2 outline-none border-blue-200 rounded-md h-10" onKeyUp={Enter} type="text" value={senha} onChange={e => setSenha(e.target.value)} />
+                <img src={frei} alt="Logo Frei" width={140} height={20} className="m-10" />
 
-                <button disabled={desabilitado} className="border-1 border-none bg-blue-700 text-white h-10 cursor-pointer w-full rounded-md mt-3 hover:bg-blue-600 transition-all" onClick={CadastrarAdmin}>Login</button>
+                <form className="w-full">
+                    <div className="w-full mb-8">
+                        <label className="block font-semibold">E-mail de acesso</label>
+                        <input
+                            type="text"
+                            placeholder="Seu e-mail de acesso"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                        />
+                    </div>
+
+                    <div className="w-full mb-6">
+                        <label className="block font-semibold">Digite sua senha</label>
+                        <input
+                            type="password"
+                            placeholder="Digite sua senha"
+                            value={senha}
+                            onChange={(e) => setSenha(e.target.value)}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1"
+                        />
+                    </div>
+
+                    {erro && (
+                        <p className="text-red-600 text-center mb-4">{erro}</p>
+                    )}
+
+                    <button
+                        onClick={entrar}
+                        type="button"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition-all"
+                    >
+                        Acessar Sistema
+                    </button>
+
+                </form>
             </div>
-
         </div>
-    )
+    );
 }

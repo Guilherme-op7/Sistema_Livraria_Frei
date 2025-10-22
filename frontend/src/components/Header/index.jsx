@@ -1,8 +1,18 @@
 import frei from '../../assets/images/frei.png'
 import { CiLogout } from "react-icons/ci";
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 export default function index() {
+    const navigate = useNavigate();
+    
+    function sair() {
+        localStorage.removeItem("email");
+        localStorage.removeItem("token");
+
+        navigate('/')
+    }
+
+
     return (
         <div className="flex bg-blue-500 h-30 w-full items-center">
             <div className="flex h-30 w-1/2 p-10 items-center">
@@ -13,12 +23,10 @@ export default function index() {
                 </div>
             </div>
             <div className='flex h-30 w-1/2 items-center justify-end p-10'>
-                <Link to={'/'}>
-                    <div className='flex items-center justify-center gap-3'>
-                        <h1 className='text-white font-(montserrat) mb-1.5 font-medium text-2xl'>Sair</h1>
-                        <CiLogout className='text-white text-2xl' />
-                    </div>
-                </Link>
+                <button onClick={sair} className='text-white font-montserrat mb-1.5 font-medium text-2xl cursor-pointer'>
+                    Sair
+                </button>
+                <CiLogout className='text-white text-2xl' />
             </div>
         </div >
     )

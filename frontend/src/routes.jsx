@@ -10,9 +10,9 @@ export default function Navegacao() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Home />} />
+                <Route path='/' element={<Cadastro />} />
+                <Route path='/Home' element={<Home />} />
                 <Route path='/Login' element={<Login />} />
-                <Route path='/Cadastro' element={<Cadastro />} />
                 <Route path='/Emprestimos' element={<Emprestimos />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>

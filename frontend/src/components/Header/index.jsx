@@ -1,6 +1,5 @@
 import frei from '../../assets/images/frei.png'
-import { CiLogout } from "react-icons/ci"; // deslogar
-import { FaUser } from "react-icons/fa"; // logar
+import { CiLogout } from "react-icons/ci";
 import { Link } from 'react-router-dom';
 
 export default function index() {
@@ -14,10 +13,10 @@ export default function index() {
                 </div>
             </div>
             <div className='flex h-30 w-1/2 items-center justify-end p-10'>
-                <Link to={'/Cadastro'}>
+                <Link to={'/'}>
                     <div className='flex items-center justify-center gap-3'>
-                        <h1 className='text-white font-(montserrat) mb-1.5 font-medium text-2xl'>Login</h1>
-                        <FaUser className='text-white text-2xl' />
+                        <h1 className='text-white font-(montserrat) mb-1.5 font-medium text-2xl'>Sair</h1>
+                        <CiLogout className='text-white text-2xl' />
                     </div>
                 </Link>
             </div>

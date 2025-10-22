@@ -34,7 +34,7 @@ export default function Login() {
             await api.post('/admin', credenciais)
             alert("Admin Cadastrado com sucesso!")
             setDesabilitado(true)
-            navigate('/Home');
+            navigate('/Login');
         }
 
         catch (err) {

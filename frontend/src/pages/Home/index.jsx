@@ -1,11 +1,25 @@
-import { IoBookOutline } from "react-icons/io5";
-import { FaExchangeAlt } from "react-icons/fa";
+import api from '../../api.js'
 
 import Header from '../../components/Header'
 import Navegacao from '../../components/Navegacao'
 import Bloco from '../../components/LivroBloco'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 function App() {
+    const [arr, setArr] = useState([]);
+
+    async function BuscarLivros() {
+        const resp = await api.get('/livros')
+        console.log(resp.data.Lista)
+
+        setArr(resp.data.Lista);
+    }
+
+    useEffect(() => {
+        BuscarLivros()
+    }, [])
+
     return (
         <div className="flex flex-col h-screen">
             <Header />
@@ -20,12 +34,21 @@ function App() {
                         <button className="flex cursor-pointer w-1/2 gap-2 text-white hover:bg-blue-500 transition-all bg-blue-600 justify-center items-center h-10 rounded-md">Adicionar Livro</button>
                     </div>
                 </div>
-                <Bloco
-                    titulo={'O senhor dos anéis'}
-                    autor={'J.R.R Tolkien'}
-                    ano={'2024'}
-                    genero={'Fantasia'}
-                    status={'Disponível'} />
+
+                <div className='flex flex-row gap-5'>
+                    {
+                        arr.map((dados) => (
+                            <Bloco
+                                key={dados.id}
+                                titulo={dados.titulo}
+                                genero={dados.genero}
+                                ano={dados.ano}
+                                autor={dados.autor}
+                                status={dados.status}
+                            />
+                        ))
+                    }
+                </div>
             </div>
         </div>
     )

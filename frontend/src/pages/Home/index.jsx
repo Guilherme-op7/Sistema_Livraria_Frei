@@ -8,18 +8,28 @@ import { useEffect } from 'react'
 
 function App() {
     const [arr, setArr] = useState([]);
+    const [filtro, setFiltro] = useState('');
 
-    async function BuscarLivros() {
+    async function CarregarLivros() {
         const resp = await api.get('/livros')
         console.log(resp.data.Lista)
-
         setArr(resp.data.Lista);
     }
 
     useEffect(() => {
-        BuscarLivros()
+        CarregarLivros()
     }, [])
 
+    async function FiltrarLivros() {
+        const resp = await api.get('/filtrar/livros', { params: { filtro } })
+        const resultados = [...resp.data.Lista]
+
+        setArr(resultados);
+    }
+
+    useEffect(() => {
+        FiltrarLivros()
+    }, [filtro])
 
     return (
         <div className="flex flex-col h-screen">
@@ -28,7 +38,7 @@ function App() {
                 <Navegacao />
                 <div className="flex w-all h-20 shadow-2xl gap-10 bg-white items-center p-5 rounded-xl">
                     <div className="flex w-3/4">
-                        <input type="text" placeholder='Buscar por título, autor ou gênero...' className="border p-4 placeholder:text-gray-500 border-black/20 w-full outline-none h-10 rounded-md" />
+                        <input value={filtro} onChange={e => setFiltro(e.target.value)} type="text" placeholder='Buscar por título, autor ou gênero...' className="border p-4 placeholder:text-gray-500 border-black/20 w-full outline-none h-10 rounded-md" />
                     </div>
                     <div className="flex w-1/4 justify-end gap-5">
                         <button className="flex cursor-pointer w-1/2 gap-2 text-black border border-black/20 transition-all bg-white justify-center items-center h-10 rounded-md">Todos os Status</button>

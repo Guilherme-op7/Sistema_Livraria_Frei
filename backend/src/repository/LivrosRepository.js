@@ -6,8 +6,19 @@ export async function ListarLivros() {
     return dados;
 }
 
+export async function ListarLivrosFiltro(filtro) {
+    let [resultado] = await connection.query(`
+        SELECT DISTINCT * FROM livros
+        WHERE titulo LIKE ? 
+        OR autor LIKE ? 
+        OR genero LIKE ?`,
+        [`%${filtro}%`, `%${filtro}%`, `%${filtro}%`]);
+
+    return resultado;
+}
+
 export async function ListarLivrosTitulo(titulo) {
-    let [resultado] = 
+    let [resultado] =
         await connection.query(
             `SELECT * FROM livros
             WHERE titulo like ?`, [`%${titulo}%`]
@@ -17,7 +28,7 @@ export async function ListarLivrosTitulo(titulo) {
 }
 
 export async function ListarLivrosAutor(autor) {
-    let [resultado] = 
+    let [resultado] =
         await connection.query(
             `SELECT * FROM livros
             WHERE autor like ?`, [`%${autor}%`]
@@ -27,7 +38,7 @@ export async function ListarLivrosAutor(autor) {
 }
 
 export async function ListarLivrosGenero(genero) {
-    let [resultado] = 
+    let [resultado] =
         await connection.query(
             `SELECT * FROM livros
             WHERE genero like ?`, [`%${genero}%`]

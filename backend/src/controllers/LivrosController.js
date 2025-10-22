@@ -1,4 +1,4 @@
-import { AtualizarLivro, CriarLivro, DeletarLivro, ListarLivros, ListarLivrosAutor, ListarLivrosGenero, ListarLivrosTitulo } from '../repository/LivrosRepository.js';
+import { AtualizarLivro, CriarLivro, DeletarLivro, ListarLivros, ListarLivrosAutor, ListarLivrosGenero, ListarLivrosTitulo, ListarLivrosFiltro } from '../repository/LivrosRepository.js';
 import { getAuthentication } from '../utils/jwt.js';
 
 import { Router } from 'express';
@@ -25,6 +25,24 @@ endpoints.get('/livros', autenticador, async (req, res) => {
         });
     }
 })
+
+endpoints.get('/filtrar/livros', autenticador, async (req, res) => {
+    try {
+        const filtro = req.query.filtro;
+
+        const resposta = await ListarLivrosFiltro(filtro);
+
+        res.status(200).send({
+            Lista: resposta
+        });
+    }
+
+    catch (err) {
+        res.status(500).send({
+            erro: "Erro ao buscar livros."
+        });
+    }
+});
 
 endpoints.get('/filtrar/livros/titulo', autenticador, async (req, res) => {
     try {

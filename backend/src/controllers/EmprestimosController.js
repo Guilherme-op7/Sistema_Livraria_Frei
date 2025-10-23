@@ -25,31 +25,31 @@ endpoints.get('/emprestimos', autenticador, async (req, res) => {
 
 endpoints.post('/emprestimos', autenticador, async (req, res) => {
     try {
-        let dados = req.body;
-
-        let resposta = await InserirEmprestimo(dados);
-
-        res.status(201).send({
-            mensagem: 'Empréstimo cadastrado com sucesso', resposta
-        });
-    }
-
+        const resposta = await RegistrarEmprestimo(req.body);
+        res.status(200).send(resposta);
+    } 
+    
     catch (err) {
-        res.status(400).send({
-            erro: err.message
-        });
+        res.status(400).send({ erro: err.message });
     }
 });
 
+
 endpoints.put('/emprestimos/:id/devolvido', autenticador, async (req, res) => {
     try {
-        let id = req.params.id;
+        const id = req.params.id;
 
-        let resposta = await MarcarComoDevolvido(id);
+        if (!id) {
+            return res.status(400).send({ erro: "ID do empréstimo não informado." });
+        }
 
-        res.status(200).send(resposta);
-    }
+        const resposta = await MarcarComoDevolvido(id);
 
+        res.status(200).send({
+            mensagem: "Empréstimo marcado como devolvido com sucesso!",
+            resposta: resposta
+        });
+    } 
     catch (err) {
         res.status(400).send({
             erro: err.message

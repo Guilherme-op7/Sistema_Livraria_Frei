@@ -40,13 +40,16 @@ export async function AtualizarEmprestimo(id, status, data_prevista_devolucao) {
 }
 
 export async function MarcarComoDevolvido(id_emprestimo) {
-    let [emprestimo] =
-        await connection.query(
-            `SELECT id_livro FROM emprestimos WHERE id = ?`,
-            [id_emprestimo]
-        );
+    const [emprestimo] = await connection.query(
+        `SELECT id_livro FROM emprestimos WHERE id = ?`,
+        [id_emprestimo]
+    );
 
-    let id_livro = emprestimo[0].id_livro;
+    if (!emprestimo || emprestimo.length === 0) {
+        throw new Error("Empréstimo não encontrado.");
+    }
+
+    const id_livro = emprestimo[0].id_livro;
 
     await connection.query(
         `UPDATE emprestimos 
@@ -62,5 +65,5 @@ export async function MarcarComoDevolvido(id_emprestimo) {
         [id_livro]
     );
 
-    return emprestimo;
+    return { id_emprestimo, id_livro };
 }

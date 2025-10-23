@@ -23,10 +23,10 @@ export default function Header() {
                 </div>
             </div>
                 <div className='flex h-30 w-1/2 items-center justify-end p-10'>
-                    <button onClick={Sair} className='text-white font-montserrat mb-1.5 font-medium text-2xl cursor-pointer'>
+                    <button onClick={Sair} className='flex text-white font-montserrat mb-1.5 font-medium text-2xl cursor-pointer'>
                         Sair
+                    <CiLogout className='text-white text-2xl m-1.5'  />
                     </button>
-                    <CiLogout className='text-white text-2xl' />
                 </div>
         </div>
     )

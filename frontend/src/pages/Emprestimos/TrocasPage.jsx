@@ -1,17 +1,44 @@
-import { useState, useEffect } from 'react'
-import api from '../../api'
-import Header from '../../components/Header'
-import Navegacao from '../../components/Navegacao'
-import Bloco from '../../components/EmprestimoBloco/index'
+import { useState, useEffect } from 'react';
+import api from '../../api';
+import Header from '../../components/Header';
+import Navegacao from '../../components/Navegacao';
+import Bloco from '../../components/EmprestimoBloco';
+import ModalRegistrarEmprestimo from '../../components/EmprestimoModal';
 
 export default function TrocasPage() {
     const [array, setArray] = useState([]);
     const [filtro, setFiltro] = useState('');
+    const [ModalAberto, setModalAberto] = useState(false);
 
     async function FiltrarEmprestimos() {
         const response = await api.get('/emprestimos', { params: { filtro } });
         setArray(response.data.resposta);
     }
+
+    async function RegistrarEmprestimo(novoEmprestimo) {
+        try {
+            await api.post('/emprestimos', novoEmprestimo);
+            await FiltrarEmprestimos();
+            alert('Empréstimo registrado com sucesso!');
+        }
+        catch (err) {
+            alert('Erro ao registrar empréstimo: ' + err.message);
+        }
+    }
+
+    async function AtualizarStatus(id) {
+        try {
+            await api.put(`/emprestimos/${id}/devolvido`);
+            setArray(prev =>
+                prev.map(item =>
+                    item.id === id ? { ...item, status: "devolvido" } : item
+                )
+            );
+        } catch (err) {
+            alert('Erro ao marcar como devolvido: ' + err.message);
+        }
+    }
+
 
     useEffect(() => {
         FiltrarEmprestimos();
@@ -21,7 +48,6 @@ export default function TrocasPage() {
         const timeout = setTimeout(() => {
             FiltrarEmprestimos(filtro);
         }, 300);
-
         return () => clearTimeout(timeout);
     }, [filtro]);
 
@@ -39,7 +65,10 @@ export default function TrocasPage() {
                     EmprestimosHover='hover:bg-blue-500'
                 />
 
-                <button className='px-4 bg-blue-500 rounded-md w-40 h-12 text-white hover:bg-blue-400 cursor-pointer '>
+                <button
+                    onClick={() => setModalAberto(true)}
+                    className='px-4 bg-blue-500 rounded-md w-40 h-12 text-white hover:bg-blue-400 cursor-pointer'
+                >
                     Novo Empréstimo
                 </button>
             </div>
@@ -55,10 +84,11 @@ export default function TrocasPage() {
                 />
             </div>
 
-            <div className='' >
+            <div>
                 {array.map((dados) => (
                     <Bloco
                         key={dados.id}
+                        id={dados.id}
                         titulo={dados.titulo}
                         autor={dados.autor}
                         ano={dados.ano}
@@ -68,9 +98,16 @@ export default function TrocasPage() {
                         turma={dados.turma}
                         data_emprestimo={dados.data_emprestimo}
                         data_prevista_devolucao={dados.data_prevista_devolucao}
+                        StatusClick={AtualizarStatus}
                     />
                 ))}
             </div>
+
+            <ModalRegistrarEmprestimo
+                aberto={ModalAberto}
+                fechado={() => setModalAberto(false)}
+                salvar={RegistrarEmprestimo}
+            />
         </div>
     );
 }

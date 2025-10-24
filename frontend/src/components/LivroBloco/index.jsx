@@ -1,6 +1,6 @@
 import { FaTrashAlt } from "react-icons/fa";
 
-export default function index({ titulo, autor, ano, genero, status }) {
+export default function index({ id, deletar, titulo, autor, ano, genero, status }) {
     return (
         <div className="flex flex-col w-70 h-80 rounded-xl shadow-2xl">
             <div className="flex w-all rounded-t-xl h-[50%] bg-gray-200">
@@ -18,7 +18,7 @@ export default function index({ titulo, autor, ano, genero, status }) {
                 </div>
                 <div className="flex gap-5 mt-3">
                     <button className="flex w-[50%] rounded-md cursor-pointer items-center justify-center bg-gray-200">Editar</button>
-                    <button className="flex w-[50%] rounded-md cursor-pointer items-center justify-center gap-1 text-white bg-red-500"><FaTrashAlt /> Deletar</button>
+                    <button onClick={() => deletar(id)} className="flex w-[50%] rounded-md cursor-pointer items-center justify-center gap-1 text-white bg-red-500"><FaTrashAlt /> Deletar</button>
                 </div>
             </div>
 

@@ -70,8 +70,7 @@ function HomePage() {
         }
 
         catch (err) {
-            console.log(err)
-            return
+            alert(err.message)
         }
     }
 

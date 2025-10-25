@@ -8,21 +8,21 @@ export default function EditarLivroModal({ aberto, fechado, salvar, livro }) {
     const [urlcapa, setUrlCapa] = useState('')
     const [status, setStatus] = useState('')
 
-    useEffect(() => {
-        if (livro) {
-            setTitulo(livro.titulo)
-            setAutor(livro.autor)
-            setGenero(livro.genero)
-            setAnoPublicacao(livro.ano_publicacao)
-            setUrlCapa(livro.url_capa || '')
-            setStatus(livro.status)
-        }
-    }, [livro])
+useEffect(() => {
+    if (livro) {
+        setTitulo(livro.titulo || '')
+        setAutor(livro.autor || '')
+        setGenero(livro.genero || '')
+        setAnoPublicacao(livro.ano_publicacao?.split('T')[0] || '')
+        setUrlCapa(livro.url_capa || '')
+        setStatus(livro.status || '')
+    }
+}, [livro])
 
     async function Validacao() {
         if (!titulo || !autor || !genero || !ano_publicacao || !urlcapa || !status) {
-            alert('Por favor, preencha todos os campos')
-            return
+            alert('Por favor, preencha todos os campos');
+            return;
         }
 
         const novoLivro = {

@@ -1,32 +1,23 @@
-import { useState, useEffect } from 'react'
-import api from '../../api'
+import { useEffect, useState } from "react"
 
-function ModalRegistrarLivro({ aberto, fechado, salvar }) {
-    // const [livros, setLivros] = useState([])
+export default function EditarLivroModal({ aberto, fechado, salvar, livro }) {
     const [titulo, setTitulo] = useState('')
     const [autor, setAutor] = useState('')
     const [genero, setGenero] = useState('')
     const [ano_publicacao, setAnoPublicacao] = useState('')
     const [urlcapa, setUrlCapa] = useState('')
-    const [status, setStatus] = useState('disponível')
+    const [status, setStatus] = useState('')
 
-    // async function CarregarLivrosDisponiveis() {
-    //     try {
-    //         const resp = await api.get('/livros')
-    //         const disponiveis = resp.data.Lista.filter(l => l.status.toLowerCase() === 'disponível')
-    //         setLivros(disponiveis)
-    //     }
-
-    //     catch (err) {
-    //         console.error('Erro ao carregar livros:', err)
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (aberto) {
-    //         CarregarLivrosDisponiveis()
-    //     }
-    // }, [aberto])
+    useEffect(() => {
+        if (livro) {
+            setTitulo(livro.titulo)
+            setAutor(livro.autor)
+            setGenero(livro.genero)
+            setAnoPublicacao(livro.ano_publicacao)
+            setUrlCapa(livro.url_capa || '')
+            setStatus(livro.status)
+        }
+    }, [livro])
 
     async function Validacao() {
         if (!titulo || !autor || !genero || !ano_publicacao || !urlcapa || !status) {
@@ -44,22 +35,16 @@ function ModalRegistrarLivro({ aberto, fechado, salvar }) {
         }
 
         try {
-            await salvar(novoLivro)
+            await salvar(novoLivro, livro.id)
             Cancelar()
         }
 
         catch (err) {
-            alert('Erro ao registrar livro: ' + err.message)
+            alert('Erro ao alterar informações: ' + err.message)
         }
     }
 
     function Cancelar() {
-        setTitulo('')
-        setAutor('')
-        setGenero('')
-        setAnoPublicacao('')
-        setUrlCapa('')
-        setStatus('')
         fechado()
     }
 
@@ -71,7 +56,7 @@ function ModalRegistrarLivro({ aberto, fechado, salvar }) {
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 transform transition-all scale-100 hover:scale-[1.01] duration-200">
 
                 <div className="bg-blue-600 text-white px-6 py-4 rounded-t-2xl shadow-md">
-                    <h2 className="text-xl font-semibold">Registrar Novo Livro</h2>
+                    <h2 className="text-xl font-semibold">Editar Livro</h2>
                 </div>
 
                 <div className="px-6 py-6 space-y-4">
@@ -147,13 +132,13 @@ function ModalRegistrarLivro({ aberto, fechado, salvar }) {
                 <div className="px-6 py-4 flex gap-3 justify-end bg-gray-50 rounded-b-2xl">
                     <button
                         onClick={Cancelar}
-                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="px-6 py-2 border cursor-pointer border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
                     >
                         Cancelar
                     </button>
                     <button
                         onClick={Validacao}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 shadow-md hover:shadow-lg transition-all"
+                        className="px-6 py-2 bg-blue-600 cursor-pointer text-white rounded-md hover:bg-blue-500 shadow-md hover:shadow-lg transition-all"
                     >
                         Registrar
                     </button>
@@ -162,5 +147,3 @@ function ModalRegistrarLivro({ aberto, fechado, salvar }) {
         </div>
     )
 }
-
-export default ModalRegistrarLivro

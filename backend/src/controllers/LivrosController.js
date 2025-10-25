@@ -83,7 +83,7 @@ endpoints.post('/livros', autenticador, async (req, res) => {
     }
 })
 
-endpoints.put('/livros/:id', autenticador, async (req, res) => {
+endpoints.put('/livros/:id', async (req, res) => {
     try {
         let dados = req.body;
         let id = req.params.id;
@@ -105,7 +105,7 @@ endpoints.put('/livros/:id', autenticador, async (req, res) => {
     }
 })
 
-endpoints.delete('/livros/:id', autenticador, async (req, res) => {
+endpoints.delete('/livros/:id', async (req, res) => {
     try {
         let id = req.params.id;
 

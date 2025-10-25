@@ -50,8 +50,8 @@ export async function ListarLivrosGenero(genero) {
 export async function CriarLivro(dados) {
     let [resposta] = await connection.query(
         `INSERT INTO livros (titulo, autor, genero, ano_publicacao, url_capa, status)
-         VALUES (?, ?, ?, ?, ?, 'Disponível')`,
-        [dados.titulo, dados.autor, dados.genero, dados.ano_publicacao, dados.url_capa]
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [dados.titulo, dados.autor, dados.genero, dados.ano_publicacao, dados.url_capa, dados.status]
     );
 
     return resposta;

@@ -1,5 +1,5 @@
 export default function ModalExcluirLivro({ aberto, fechado, salvar, id }) {
-    async function Validacao(id) {
+    async function Validacao() {
         try {
             await salvar(id)
             console.log(id)

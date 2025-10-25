@@ -20,7 +20,9 @@ function HomePage() {
         try {
             const resp = await api.get('/livros')
             setArr(resp.data.Lista)
-        } catch (err) {
+        } 
+        
+        catch (err) {
             console.error('Erro ao carregar livros:', err)
         }
     }

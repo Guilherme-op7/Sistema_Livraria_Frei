@@ -1,5 +1,4 @@
 import api from '../../api.js'
-
 import Header from '../../components/Header'
 import Navegacao from '../../components/Navegacao'
 import Bloco from '../../components/LivroBloco'
@@ -13,20 +12,26 @@ function HomePage() {
     const [modal, setModal] = useState(false);
 
     async function CarregarLivros() {
-        const resp = await api.get('/livros')
-        console.log(resp.data.Lista)
-        setArr(resp.data.Lista);
+        try {
+            const resp = await api.get('/livros')
+            setArr(resp.data.Lista)
+        } catch (err) {
+            console.error('Erro ao carregar livros:', err)
+        }
     }
-
     useEffect(() => {
         CarregarLivros()
     }, [])
 
-    async function FiltrarLivros() {
-        const resp = await api.get('/filtrar/livros', { params: { filtro } })
-        const resultados = [...resp.data.Lista]
 
-        setArr(resultados);
+
+    async function FiltrarLivros() {
+        try {
+            const resp = await api.get('/filtrar/livros', { params: { filtro } })
+            setArr(resp.data.Lista)
+        } catch (err) {
+            console.error('Erro ao filtrar livros:', err)
+        }
     }
 
     useEffect(() => {
@@ -55,7 +60,13 @@ function HomePage() {
                 <Navegacao />
                 <div className="flex w-full h-20 shadow-2xl gap-10 bg-white items-center p-5 rounded-xl">
                     <div className="flex w-3/4">
-                        <input value={filtro} onChange={e => setFiltro(e.target.value)} type="text" placeholder='Buscar por título, autor ou gênero...' className="border p-4 placeholder:text-gray-500 border-black/20 w-full outline-none h-10 rounded-md" />
+                        <input
+                            value={filtro}
+                            onChange={e => setFiltro(e.target.value)}
+                            type="text"
+                            placeholder='Buscar por título, autor ou gênero...'
+                            className="border p-4 placeholder:text-gray-500 border-black/20 w-full outline-none h-10 rounded-md"
+                        />
                     </div>
                     <div className="flex w-1/4 justify-end gap-5">
                         <button className="flex cursor-pointer w-1/2 gap-2 text-black border border-black/20 transition-all bg-white justify-center items-center h-10 rounded-md">Todos os Status</button>

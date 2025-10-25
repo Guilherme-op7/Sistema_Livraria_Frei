@@ -25,7 +25,7 @@ endpoints.get('/emprestimos', autenticador, async (req, res) => {
 
 endpoints.post('/emprestimos', autenticador, async (req, res) => {
     try {
-        const resposta = await RegistrarEmprestimo(req.body);
+        const resposta = await InserirEmprestimo(req.body);
         res.status(200).send(resposta);
     } 
     

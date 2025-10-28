@@ -20,8 +20,8 @@ function HomePage() {
         try {
             const resp = await api.get('/livros')
             setArr(resp.data.Lista)
-        } 
-        
+        }
+
         catch (err) {
             console.error('Erro ao carregar livros:', err)
         }
@@ -109,7 +109,7 @@ function HomePage() {
                     </div>
                 </div>
 
-                <div className='flex flex-row gap-5'>
+                <div className='grid grid-cols-5 self-center gap-5 pb-25'>
                     {
                         arr.map((dados) => (
                             <Bloco
@@ -117,6 +117,7 @@ function HomePage() {
                                 id={dados.id}
                                 titulo={dados.titulo}
                                 genero={dados.genero}
+                                imagem={dados.url_capa}
                                 ano={dados.ano_publicacao.split("T")[0]}
                                 autor={dados.autor}
                                 status={dados.status}

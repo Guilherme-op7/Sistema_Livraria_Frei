@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 function HomePage() {
   const [arr, setArr] = useState([]);
   const [filtro, setFiltro] = useState('');
+  const [status, setStatus] = useState('todos')
   const [modal, setModal] = useState(false);
   const [editando, setEditando] = useState(false);
   const [excluir, setExcluir] = useState(false);
@@ -54,8 +55,8 @@ function HomePage() {
       await api.delete(`/livros/${id}`);
 
       CarregarLivros();
-    } 
-    
+    }
+
     catch (err) {
       console.log(err);
 
@@ -68,7 +69,7 @@ function HomePage() {
       await api.put(`/livros/${id}`, dados);
 
       await CarregarLivros();
-      
+
       setEditando(false);
     }
 
@@ -85,6 +86,13 @@ function HomePage() {
   async function AbrirModalExcluir(id) {
     setSelecionado(id);
     setExcluir(true);
+  }
+
+  function AlterarStatus() {
+    if (status === "todos") setStatus("disponível");
+    else if (status === "disponível") setStatus("emprestado");
+    else if (status === "emprestado") setStatus("indisponível");
+    else setStatus("todos");
   }
 
   return (
@@ -105,8 +113,13 @@ function HomePage() {
             />
           </div>
           <div className="flex w-1/4 justify-end gap-5">
-            <button className="flex cursor-pointer w-1/2 gap-2 text-black border border-black/20 transition-all bg-white justify-center items-center h-10 rounded-md">
-              Todos os Status
+            <button
+              onClick={AlterarStatus}
+              className="flex cursor-pointer w-1/2 gap-2 text-black border border-black/20 transition-all bg-white justify-center items-center h-10 rounded-md"
+            >
+              {status === "todos"
+                ? "Todos os Status"
+                : status[0].toUpperCase() + status.substring(1)}
             </button>
             <button
               onClick={() => setModal(true)}
@@ -118,20 +131,26 @@ function HomePage() {
         </div>
 
         <div className="grid grid-cols-5 self-center gap-5 pb-25">
-          {arr.map(dados => (
-            <Bloco
-              key={dados.id}
-              id={dados.id}
-              titulo={dados.titulo}
-              genero={dados.genero}
-              imagem={dados.url_capa}
-              ano={dados.ano_publicacao.split('T')[0]}
-              autor={dados.autor}
-              status={dados.status}
-              deletar={() => AbrirModalExcluir(dados.id)}
-              editar={() => AbrirModal(dados)}
-            />
-          ))}
+          {arr
+            .filter(livro =>
+              status === "todos"
+                ? true
+                : livro.status.toLowerCase() === status
+            )
+            .map(livro => (
+              <Bloco
+                key={livro.id}
+                id={livro.id}
+                titulo={livro.titulo}
+                genero={livro.genero}
+                imagem={livro.url_capa}
+                ano={livro.ano_publicacao.split("T")[0]}
+                autor={livro.autor}
+                status={livro.status}
+                deletar={() => AbrirModalExcluir(livro.id)}
+                editar={() => AbrirModal(livro)}
+              />
+            ))}
         </div>
       </div>
 

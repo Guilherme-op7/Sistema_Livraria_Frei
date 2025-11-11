@@ -1,15 +1,16 @@
 import { Router } from "express";
 
 import { getAuthentication } from "../utils/jwt.js";
-import { ListarEmprestimos, InserirEmprestimo, MarcarComoDevolvido } from "../repository/EmprestimosRepository.js";
+import { ListarEmprestimos, InserirEmprestimo, MarcarComoDevolvido, DeletarTodosEmprestimos } from "../repository/EmprestimosRepository.js";
 
 const endpoints = Router();
 const autenticador = getAuthentication();
 
 endpoints.get('/emprestimos', autenticador, async (req, res) => {
     try {
-        const filtro = req.query.filtro; 
-        const resposta = await ListarEmprestimos(filtro);
+        let filtro = req.query.filtro; 
+
+        let resposta = await ListarEmprestimos(filtro);
 
         res.status(200).json({ resposta });
     }
@@ -21,37 +22,54 @@ endpoints.get('/emprestimos', autenticador, async (req, res) => {
     }
 });
 
-
-
 endpoints.post('/emprestimos', autenticador, async (req, res) => {
     try {
-        const resposta = await InserirEmprestimo(req.body);
-        res.status(200).send(resposta);
+        let resposta = await InserirEmprestimo(req.body);
+
+        res.status(200).json(resposta);
     } 
     
     catch (err) {
-        res.status(400).send({ erro: err.message });
+        res.status(400).json({ erro: err.message });
     }
 });
 
 
 endpoints.put('/emprestimos/:id/devolvido', autenticador, async (req, res) => {
     try {
-        const id = req.params.id;
+        let id = req.params.id;
 
         if (!id) {
             return res.status(400).send({ erro: "ID do empréstimo não informado." });
         }
 
-        const resposta = await MarcarComoDevolvido(id);
+        let resposta = await MarcarComoDevolvido(id);
 
         res.status(200).send({
             mensagem: "Empréstimo marcado como devolvido com sucesso!",
             resposta: resposta
         });
     } 
+    
     catch (err) {
         res.status(400).send({
+            erro: err.message
+        });
+    }
+});
+
+endpoints.delete('/emprestimos', autenticador, async (req, res) => {
+    try {
+        let resposta = await DeletarTodosEmprestimos();
+
+        res.status(200).json({
+            mensagem: "Todos os empréstimos foram excluídos com sucesso!",
+            resposta
+        });
+    } 
+
+    catch (err) {
+        res.status(500).json({
             erro: err.message
         });
     }

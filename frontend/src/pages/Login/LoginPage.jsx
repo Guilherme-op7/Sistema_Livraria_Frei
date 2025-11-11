@@ -42,7 +42,7 @@ export default function Login() {
     return (
         <div className="bg-blue-800 h-dvh flex justify-center items-center w-full">
 
-            <div className="bg-white rounded-2xl shadow-lg p-10 w-130 flex flex-col items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-lg p-12 w-md flex flex-col items-center justify-center">
 
                 <img src={frei} alt="" height={20} width={120} className="m-12" />
 

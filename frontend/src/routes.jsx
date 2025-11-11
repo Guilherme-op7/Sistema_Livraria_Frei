@@ -10,22 +10,22 @@ export default function Navegacao() {
             <Routes>
                 <Route path='/' element={<Login />} />
 
-                <Route 
-                    path='/home' 
+                <Route
+                    path='/home'
                     element={
                         <RotaPrivada>
                             <HomePage />
                         </RotaPrivada>
-                    } 
+                    }
                 />
 
-                <Route 
-                    path='/emprestimos' 
+                <Route
+                    path='/emprestimos'
                     element={
                         <RotaPrivada>
                             <TrocasPage />
                         </RotaPrivada>
-                    } 
+                    }
                 />
             </Routes>
         </BrowserRouter>

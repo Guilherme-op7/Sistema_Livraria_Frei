@@ -20,17 +20,14 @@ function ModalRegistrarEmprestimo({ aberto, fechado, salvar }) {
             console.error('Erro ao carregar livros:', err)
         }
     }
-
+    
     useEffect(() => {
         if (aberto) {
             CarregarLivrosDisponiveis()
         }
     }, [aberto])
-    
-    function formatarData(data) {
-        const [dia, mes, ano] = data.split('/')
-        return `${ano}-${mes}-${dia}`
-    }
+
+
 
     async function Validacao() {
         if (!idLivro || !nomeAluno || !turma || !dataEmprestimo || !dataDevolucao) {
@@ -41,10 +38,11 @@ function ModalRegistrarEmprestimo({ aberto, fechado, salvar }) {
         const novoEmprestimo = {
             id_livro: Number(idLivro),
             nome_aluno: nomeAluno,
-            turma,
-            data_emprestimo: formatarData(dataEmprestimo),
-            data_prevista_devolucao: formatarData(dataDevolucao)
-        }
+            turma: turma,
+            data_emprestimo: dataEmprestimo, 
+            data_prevista_devolucao: dataDevolucao 
+        };
+
 
         try {
             await salvar(novoEmprestimo)

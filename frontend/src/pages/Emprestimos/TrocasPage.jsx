@@ -10,17 +10,26 @@ export default function TrocasPage() {
     const [filtro, setFiltro] = useState('');
     const [ModalAberto, setModalAberto] = useState(false);
 
-    async function FiltrarEmprestimos() {
-        const response = await api.get('/emprestimos', { params: { filtro } });
-        setArray(response.data.resposta);
+    async function FiltrarEmprestimos(valor = filtro) {
+        try {
+            const response = await api.get('/emprestimos', { params: { filtro: valor } });
+            setArray(response.data.resposta);
+        } 
+        
+        catch (err) {
+            console.error('Erro ao listar empréstimos:', err);
+        }
     }
 
     async function RegistrarEmprestimo(novoEmprestimo) {
         try {
             await api.post('/emprestimos', novoEmprestimo);
+
             await FiltrarEmprestimos();
+
             alert('Empréstimo registrado com sucesso!');
-        }
+        } 
+        
         catch (err) {
             alert('Erro ao registrar empréstimo: ' + err.message);
         }
@@ -29,16 +38,33 @@ export default function TrocasPage() {
     async function AtualizarStatus(id) {
         try {
             await api.put(`/emprestimos/${id}/devolvido`);
-            setArray(prev =>
-                prev.map(item =>
-                    item.id === id ? { ...item, status: "devolvido" } : item
-                )
-            );
-        } catch (err) {
-            alert('Erro ao marcar como devolvido: ' + err.message);
+
+            await FiltrarEmprestimos();
+
+            alert('Livro marcado como devolvido!');
+        } 
+
+        catch (err) {
+            alert(err.message);
         }
     }
 
+    async function DeletarTodosEmprestimos() {
+        if (!window.confirm("Tem certeza que deseja excluir todos os empréstimos? Essa ação não pode ser desfeita!"))
+            return;
+
+        try {
+            await api.delete('/emprestimos');
+
+            await FiltrarEmprestimos();
+
+            alert('Todos os empréstimos foram excluídos com sucesso!');
+        } 
+        
+        catch (err) {
+            alert('Erro ao excluir empréstimos: ' +err.message);
+        }
+    }
 
     useEffect(() => {
         FiltrarEmprestimos();
@@ -47,7 +73,7 @@ export default function TrocasPage() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             FiltrarEmprestimos(filtro);
-        }, 300);
+        }, 400);
         return () => clearTimeout(timeout);
     }, [filtro]);
 
@@ -65,12 +91,21 @@ export default function TrocasPage() {
                     EmprestimosHover='hover:bg-blue-500'
                 />
 
-                <button
-                    onClick={() => setModalAberto(true)}
-                    className='px-4 bg-blue-500 rounded-md w-40 h-12 text-white hover:bg-blue-400 cursor-pointer'
-                >
-                    Novo Empréstimo
-                </button>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setModalAberto(true)}
+                        className="px-5 bg-blue-600 hover:bg-blue-500 transition-all rounded-lg w-48 h-12 text-white font-medium shadow-md"
+                    >
+                        Novo Empréstimo
+                    </button>
+
+                    <button
+                        onClick={DeletarTodosEmprestimos}
+                        className="px-5 bg-red-500 hover:bg-red-400 transition-all rounded-lg w-40 h-12 text-white font-medium shadow-md"
+                    >
+                        Excluir Todos
+                    </button>
+                </div>
             </div>
 
             <div className='bg-white rounded-2xl shadow-2xl px-6 py-6 mx-13 mb-6'>

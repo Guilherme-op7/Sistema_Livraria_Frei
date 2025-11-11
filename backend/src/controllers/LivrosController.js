@@ -13,7 +13,6 @@ endpoints.get('/livros', autenticador, async (req, res) => {
 
         let resposta = await ListarLivros(dados);
 
-
         res.status(200).send({
             Lista: resposta
         });
@@ -28,9 +27,9 @@ endpoints.get('/livros', autenticador, async (req, res) => {
 
 endpoints.get('/filtrar/livros', autenticador, async (req, res) => {
     try {
-        const filtro = req.query.filtro;
+        let filtro = req.query.filtro;
 
-        const resposta = await ListarLivrosFiltro(filtro);
+        let resposta = await ListarLivrosFiltro(filtro);
 
         res.status(200).send({
             Lista: resposta
@@ -46,9 +45,9 @@ endpoints.get('/filtrar/livros', autenticador, async (req, res) => {
 
 endpoints.get('/filtrar/livros/titulo', autenticador, async (req, res) => {
     try {
-        const filtro = req.query.filtro;
+        let filtro = req.query.filtro;
 
-        const resposta = await ListarLivrosFiltro(filtro);
+        let resposta = await ListarLivrosFiltro(filtro);
 
         res.status(200).send({
             Lista: resposta
@@ -83,7 +82,7 @@ endpoints.post('/livros', autenticador, async (req, res) => {
     }
 })
 
-endpoints.put('/livros/:id', async (req, res) => {
+endpoints.put('/livros/:id', autenticador, async (req, res) => {
     try {
         let dados = req.body;
         let id = req.params.id;
@@ -105,7 +104,7 @@ endpoints.put('/livros/:id', async (req, res) => {
     }
 })
 
-endpoints.delete('/livros/:id', async (req, res) => {
+endpoints.delete('/livros/:id', autenticador, async (req, res) => {
     try {
         let id = req.params.id;
 

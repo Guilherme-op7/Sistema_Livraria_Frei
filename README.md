@@ -25,6 +25,9 @@ Sistema de livraria desenvolvido para ser o **sistema do curso**, com o objetivo
 ---
 
 👥 Desenvolvedores
+
+---
+
 Guilherme
 GitHub: [https://github.com/Guilherme-op7](https://github.com/Guilherme-op7)
 
